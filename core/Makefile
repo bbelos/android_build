@@ -766,10 +766,14 @@ $(TARGET_RECOVERY_ROOT_TIMESTAMP): $(INTERNAL_RECOVERY_FILES) \
 	$(hide) mkdir -p $(TARGET_RECOVERY_OUT)
 	$(hide) mkdir -p $(TARGET_RECOVERY_ROOT_OUT)/etc $(TARGET_RECOVERY_ROOT_OUT)/tmp
 	@echo -e ${CL_CYN}"Copying baseline ramdisk..."${CL_RST}
+ifneq ($(filter ls980,$(TARGET_DEVICE)),)
 	$(hide) mv $(TARGET_ROOT_OUT)/sbin/busybox $(TARGET_ROOT_OUT)/sbin/bb
 	$(hide) cp -R $(TARGET_ROOT_OUT) $(TARGET_RECOVERY_OUT)
 	$(hide) mv $(TARGET_ROOT_OUT)/sbin/bb $(TARGET_ROOT_OUT)/sbin/busybox
 	$(hide) rm -f $(TARGET_RECOVERY_OUT)/root/sbin/bb
+else
+	$(hide) cp -R $(TARGET_ROOT_OUT) $(TARGET_RECOVERY_OUT)
+endif
 	@echo -e ${CL_CYN}"Modifying ramdisk contents..."${CL_RST}
 	$(hide) rm -f $(TARGET_RECOVERY_ROOT_OUT)/init*.rc
 	$(hide) cp -f $(recovery_initrc) $(TARGET_RECOVERY_ROOT_OUT)/init.rc
